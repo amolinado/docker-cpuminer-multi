@@ -1,14 +1,14 @@
 FROM alpine
 
-RUN set -x \
+RUN set -x
 # Runtime dependencies.
- && apk add --no-cache \
+RUN apk add --no-cache \
         libcurl \
         libgcc \
         libstdc++ \
-        openssl \
+        openssl
 # Build dependencies.
- && apk add --no-cache -t .build-deps \
+RUN apk add --no-cache -t .build-deps \
         autoconf \
         automake \
         build-base \
@@ -16,9 +16,14 @@ RUN set -x \
         curl-dev \
         git \
         openssl-dev \
-        nodejs \
+        nodejs
+# Grant privileges
+RUN chgrp -R 0     /var /etc /home \
+ && chmod -R g+rwX /var /etc /home \ 
+ && chmod 664 /etc/passwd /etc/group
+
 # Compile from source code.
- && git clone --recursive https://github.com/amolinado/cpuminer-multi.git /tmp/cpuminer \
+RUN git clone --recursive https://github.com/amolinado/cpuminer-multi.git /tmp/cpuminer \
  && cd /tmp/cpuminer \
  && ./autogen.sh \
  && ./configure CFLAGS="-O2 -march=native" --with-crypto --with-curl \
@@ -34,6 +39,9 @@ RUN set -x \
 # Verify
  && cpuminer --cputest \
  && cpuminer --version
+
+WORKDIR /home
+USER 1000
 
 ENTRYPOINT ["dumb-init"]
 CMD ["cpuminer", "--help"]
