@@ -44,4 +44,3 @@ WORKDIR /home
 USER 1000
 
 ENTRYPOINT ["dumb-init"]
-CMD ["cpuminer", "--help"]
