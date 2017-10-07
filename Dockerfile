@@ -40,5 +40,5 @@ RUN git clone --recursive https://github.com/amolinado/cpuminer-multi.git /tmp/c
  && cpuminer --cputest \
  && cpuminer --version
 
-ENTRYPOINT ['dumb-init']
+ENTRYPOINT dumb-init
 CMD ['cpuminer','--help']
