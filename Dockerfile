@@ -1,4 +1,4 @@
-FROM alpine:lastest
+FROM alpine
 
 RUN set -x
 # Runtime dependencies.
