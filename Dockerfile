@@ -37,5 +37,5 @@ RUN curl -Lo /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases
 RUN apk del --purge .build-deps \
  && rm -rf /tmp/* 
 
-ENTRYPOINT ['/usr/local/bin/dumb-init']
-CMD ['cpuminer','--help']
+ENTRYPOINT ['dumb-init','cpuminer']
+CMD ['--help']
