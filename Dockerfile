@@ -1,4 +1,4 @@
-FROM alpine
+FROM alpine:lastest
 
 RUN set -x
 # Runtime dependencies.
@@ -27,18 +27,15 @@ RUN git clone --recursive https://github.com/amolinado/cpuminer-multi.git /tmp/c
  && cd /tmp/cpuminer \
  && ./autogen.sh \
  && ./configure CFLAGS="-O2 -march=native" --with-crypto --with-curl \
- && make install \
-# Install dumb-init (avoid PID 1 issues).
-# https://github.com/Yelp/dumb-init
- && curl -Lo /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.1.3/dumb-init_1.1.3_amd64 \
- && chmod +x /usr/local/bin/dumb-init \
-# Clean-up
- && cd / \
- && apk del --purge .build-deps \
- && rm -rf /tmp/* \
-# Verify
- && cpuminer --cputest \
- && cpuminer --version
+ && make install 
 
-ENTRYPOINT dumb-init
+# Install dumb-init (avoid PID 1 issues). https://github.com/Yelp/dumb-init
+RUN curl -Lo /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.1.3/dumb-init_1.1.3_amd64 \
+ && chmod +x /usr/local/bin/dumb-init
+
+# Clean-up
+RUN apk del --purge .build-deps \
+ && rm -rf /tmp/* 
+
+ENTRYPOINT ['/usr/local/bin/dumb-init']
 CMD ['cpuminer','--help']
