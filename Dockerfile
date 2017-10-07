@@ -19,7 +19,7 @@ RUN apk add --no-cache -t .build-deps \
         nodejs
 # Grant privileges
 RUN chgrp -R 0     /var /etc /home \
- && chmod -R g+rwX /var /etc /home \ 
+ && chmod -R g+rwX /var /etc /home \
  && chmod 664 /etc/passwd /etc/group
 
 # Compile from source code.
@@ -40,7 +40,5 @@ RUN git clone --recursive https://github.com/amolinado/cpuminer-multi.git /tmp/c
  && cpuminer --cputest \
  && cpuminer --version
 
-WORKDIR /home
-USER 1000
-
-ENTRYPOINT ["dumb-init"]
+ENTRYPOINT ['dumb-init']
+CMD ['cpuminer','--help']
